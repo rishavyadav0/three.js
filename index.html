@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Coca-Cola | 3D Signature Experience</title>
+    <title>Coca-Cola 3D Experience</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@1,700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
@@ -16,42 +16,29 @@
     <div id="app">
       <canvas id="scene"></canvas>
 
-      <div class="noise"></div>
-
       <header class="hero">
-        <p class="eyebrow">Coca-Cola Signature 3D</p>
-        <h1>
-          <span>Open</span>
-          <span class="script">Real Magic</span>
-        </h1>
+        <p class="eyebrow">Real Magic in 3D</p>
+        <h1>Taste The Feeling</h1>
         <p class="description">
-          A premium interactive brand universe with cinematic lighting, fizzy particles,
-          glowing ribbons, and a sculpted 3D bottle centerpiece powered by Three.js.
+          A cinematic Coca-Cola universe crafted with Three.js, immersive lighting,
+          dynamic particles, and a rotating product centerpiece.
         </p>
-
-        <div class="actions">
-          <button id="cta" class="primary">Open Happiness</button>
-          <button id="secondary" class="ghost">Feel The Fizz</button>
-        </div>
-
-        <div class="metrics glass">
-          <div><strong id="metric1">0</strong><span>Bubble Streams</span></div>
-          <div><strong id="metric2">0</strong><span>Glow Ribbons</span></div>
-          <div><strong id="metric3">0</strong><span>Realtime Motion</span></div>
-        </div>
+        <button id="cta">Open Happiness</button>
       </header>
 
-      <aside class="panel glass">
-        <h2>Experience Notes</h2>
+      <aside class="specs glass">
+        <h2>Signature Blend</h2>
         <ul>
-          <li><span>Hero Asset</span><strong>Lathe Bottle</strong></li>
-          <li><span>Post FX</span><strong>Bloom Composer</strong></li>
-          <li><span>Atmosphere</span><strong>Fizzy Particles</strong></li>
-          <li><span>Interaction</span><strong>Pointer Reactive</strong></li>
+          <li><span>3D Product Showcase</span><strong>Realtime</strong></li>
+          <li><span>Interactive Camera</span><strong>Mouse + Touch</strong></li>
+          <li><span>Atmospheric FX</span><strong>Sparkle Particles</strong></li>
+          <li><span>Visual Style</span><strong>Coca-Cola Classic</strong></li>
         </ul>
       </aside>
 
-      <footer class="credit glass">Crafted in Three.js • Coca-Cola Inspired Showcase</footer>
+      <footer class="credit glass">
+        <span>Built with Three.js</span>
+      </footer>
     </div>
 
     <script type="module" src="main.js"></script>
