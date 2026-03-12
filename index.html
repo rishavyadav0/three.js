@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coca-Cola | 3D Signature Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@1,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="scene"></canvas>
+
+      <div class="noise"></div>
+
+      <header class="hero">
+        <p class="eyebrow">Coca-Cola Signature 3D</p>
+        <h1>
+          <span>Open</span>
+          <span class="script">Real Magic</span>
+        </h1>
+        <p class="description">
+          A premium interactive brand universe with cinematic lighting, fizzy particles,
+          glowing ribbons, and a sculpted 3D bottle centerpiece powered by Three.js.
+        </p>
+
+        <div class="actions">
+          <button id="cta" class="primary">Open Happiness</button>
+          <button id="secondary" class="ghost">Feel The Fizz</button>
+        </div>
+
+        <div class="metrics glass">
+          <div><strong id="metric1">0</strong><span>Bubble Streams</span></div>
+          <div><strong id="metric2">0</strong><span>Glow Ribbons</span></div>
+          <div><strong id="metric3">0</strong><span>Realtime Motion</span></div>
+        </div>
+      </header>
+
+      <aside class="panel glass">
+        <h2>Experience Notes</h2>
+        <ul>
+          <li><span>Hero Asset</span><strong>Lathe Bottle</strong></li>
+          <li><span>Post FX</span><strong>Bloom Composer</strong></li>
+          <li><span>Atmosphere</span><strong>Fizzy Particles</strong></li>
+          <li><span>Interaction</span><strong>Pointer Reactive</strong></li>
+        </ul>
+      </aside>
+
+      <footer class="credit glass">Crafted in Three.js • Coca-Cola Inspired Showcase</footer>
+    </div>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
