@@ -1,43 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Media Detector</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <main class="container">
-    <h1>AI Media Detector</h1>
-    <p class="subtitle">Upload an image or video to estimate how likely it is AI-generated.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coca-Cola Spark | Three.js Experience</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="scene"></div>
 
-    <section class="card uploader">
-      <label for="mediaInput" class="upload-label">Choose photo or video</label>
-      <input id="mediaInput" type="file" accept="image/*,video/*" />
-      <p id="fileInfo" class="file-info">No file selected</p>
-    </section>
-
-    <section id="previewSection" class="card preview hidden">
-      <h2>Preview</h2>
-      <img id="imagePreview" alt="Uploaded preview" class="hidden" />
-      <video id="videoPreview" controls class="hidden"></video>
-      <canvas id="analysisCanvas" class="hidden"></canvas>
-    </section>
-
-    <section id="resultSection" class="card result hidden">
-      <h2>Detection Score</h2>
-      <div class="meter-wrap">
-        <div id="meterBar" class="meter-bar"></div>
-      </div>
-      <p id="scoreText" class="score-text"></p>
-      <p id="verdictText" class="verdict-text"></p>
-      <ul id="reasonList" class="reason-list"></ul>
-      <p class="disclaimer">
-        Note: This is an educational heuristic demo, not a forensic AI detector.
+    <header class="hero">
+      <p class="kicker">Taste the Feeling</p>
+      <h1>Coca-Cola Spark</h1>
+      <p class="tagline">
+        Refresh your world with an immersive celebration of the world's most iconic soda.
       </p>
-    </section>
-  </main>
+      <a class="cta" href="#flavors">Explore Flavors</a>
+    </header>
 
-  <script src="app.js"></script>
-</body>
+    <section id="flavors" class="panel">
+      <h2>Why Coca-Cola?</h2>
+      <div class="features">
+        <article>
+          <h3>Classic Original</h3>
+          <p>That signature taste you know and love, perfectly chilled and uplifting.</p>
+        </article>
+        <article>
+          <h3>Zero Sugar</h3>
+          <p>All the bold Coca-Cola flavor, with zero sugar and zero compromise.</p>
+        </article>
+        <article>
+          <h3>Share Moments</h3>
+          <p>From meals to celebrations, Coca-Cola brings people together every day.</p>
+        </article>
+      </div>
+    </section>
+
+    <script type="module" src="app.js"></script>
+  </body>
 </html>
