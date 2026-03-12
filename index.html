@@ -1,43 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Media Detector</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <main class="container">
-    <h1>AI Media Detector</h1>
-    <p class="subtitle">Upload an image or video to estimate how likely it is AI-generated.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coca-Cola 3D Promo</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="scene"></div>
 
-    <section class="card uploader">
-      <label for="mediaInput" class="upload-label">Choose photo or video</label>
-      <input id="mediaInput" type="file" accept="image/*,video/*" />
-      <p id="fileInfo" class="file-info">No file selected</p>
-    </section>
+    <main class="content">
+      <section class="hero card">
+        <p class="eyebrow">Taste the Feeling</p>
+        <h1>Open Happiness<br />with Coca-Cola</h1>
+        <p>
+          Step into a refreshing 3D Coca-Cola experience. Classic flavor, bold spirit,
+          and moments worth sharing.
+        </p>
+        <a href="#highlights" class="btn">Discover More</a>
+      </section>
 
-    <section id="previewSection" class="card preview hidden">
-      <h2>Preview</h2>
-      <img id="imagePreview" alt="Uploaded preview" class="hidden" />
-      <video id="videoPreview" controls class="hidden"></video>
-      <canvas id="analysisCanvas" class="hidden"></canvas>
-    </section>
+      <section id="highlights" class="card highlights">
+        <h2>Why People Love Coca-Cola</h2>
+        <div class="grid">
+          <article>
+            <h3>Iconic Taste</h3>
+            <p>That crisp, uplifting flavor loved for generations.</p>
+          </article>
+          <article>
+            <h3>Perfect with Food</h3>
+            <p>From burgers to pizza, Coca-Cola makes every meal better.</p>
+          </article>
+          <article>
+            <h3>Made to Share</h3>
+            <p>From family dinners to celebrations, it brings people together.</p>
+          </article>
+        </div>
+      </section>
+    </main>
 
-    <section id="resultSection" class="card result hidden">
-      <h2>Detection Score</h2>
-      <div class="meter-wrap">
-        <div id="meterBar" class="meter-bar"></div>
-      </div>
-      <p id="scoreText" class="score-text"></p>
-      <p id="verdictText" class="verdict-text"></p>
-      <ul id="reasonList" class="reason-list"></ul>
-      <p class="disclaimer">
-        Note: This is an educational heuristic demo, not a forensic AI detector.
-      </p>
-    </section>
-  </main>
-
-  <script src="app.js"></script>
-</body>
+    <script type="module" src="app.js"></script>
+  </body>
 </html>

@@ -1,206 +1,124 @@
-const mediaInput = document.getElementById('mediaInput');
-const fileInfo = document.getElementById('fileInfo');
-const previewSection = document.getElementById('previewSection');
-const resultSection = document.getElementById('resultSection');
-const imagePreview = document.getElementById('imagePreview');
-const videoPreview = document.getElementById('videoPreview');
-const analysisCanvas = document.getElementById('analysisCanvas');
-const meterBar = document.getElementById('meterBar');
-const scoreText = document.getElementById('scoreText');
-const verdictText = document.getElementById('verdictText');
-const reasonList = document.getElementById('reasonList');
+import * as THREE from 'https://unpkg.com/three@0.161.0/build/three.module.js';
 
-mediaInput.addEventListener('change', async (event) => {
-  const file = event.target.files?.[0];
+const mount = document.getElementById('scene');
 
-  resetUI();
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x7f080d, 10, 55);
 
-  if (!file) {
-    fileInfo.textContent = 'No file selected';
-    return;
-  }
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 0.2, 11);
 
-  fileInfo.textContent = `${file.name} • ${(file.size / (1024 * 1024)).toFixed(2)} MB`;
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+mount.appendChild(renderer.domElement);
 
-  const fileURL = URL.createObjectURL(file);
-  previewSection.classList.remove('hidden');
+scene.add(new THREE.AmbientLight(0xffdede, 0.9));
 
-  let analysis;
-  if (file.type.startsWith('image/')) {
-    analysis = await analyzeImage(fileURL, file);
-  } else if (file.type.startsWith('video/')) {
-    analysis = await analyzeVideo(fileURL, file);
-  } else {
-    fileInfo.textContent = 'Unsupported format. Please upload an image or video.';
-    return;
-  }
+const keyLight = new THREE.DirectionalLight(0xffffff, 1.1);
+keyLight.position.set(4, 6, 7);
+scene.add(keyLight);
 
-  renderResult(analysis);
+const backLight = new THREE.PointLight(0xff5360, 1.2, 30);
+backLight.position.set(-6, 2, -4);
+scene.add(backLight);
+
+const can = new THREE.Group();
+scene.add(can);
+
+const canBody = new THREE.Mesh(
+  new THREE.CylinderGeometry(1.25, 1.25, 4.4, 72, 1, true),
+  new THREE.MeshStandardMaterial({ color: 0xd91822, roughness: 0.3, metalness: 0.45 })
+);
+can.add(canBody);
+
+const capMat = new THREE.MeshStandardMaterial({ color: 0xd8d8d8, roughness: 0.2, metalness: 0.9 });
+const topCap = new THREE.Mesh(new THREE.CylinderGeometry(1.25, 1.25, 0.32, 72), capMat);
+topCap.position.y = 2.36;
+can.add(topCap);
+
+const bottomCap = topCap.clone();
+bottomCap.position.y = -2.36;
+can.add(bottomCap);
+
+const logoCanvas = document.createElement('canvas');
+logoCanvas.width = 1024;
+logoCanvas.height = 512;
+const ctx = logoCanvas.getContext('2d');
+ctx.fillStyle = '#d91822';
+ctx.fillRect(0, 0, logoCanvas.width, logoCanvas.height);
+ctx.fillStyle = '#ffffff';
+ctx.font = 'bold 170px "Brush Script MT", "Segoe Script", cursive';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+ctx.fillText('Coca-Cola', logoCanvas.width / 2, logoCanvas.height / 2);
+
+const labelTexture = new THREE.CanvasTexture(logoCanvas);
+labelTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+const label = new THREE.Mesh(
+  new THREE.CylinderGeometry(1.255, 1.255, 2.65, 72, 1, true, Math.PI * 0.08, Math.PI * 1.84),
+  new THREE.MeshStandardMaterial({ map: labelTexture, roughness: 0.48, metalness: 0.15, transparent: true })
+);
+can.add(label);
+
+const bubbleGeometry = new THREE.SphereGeometry(0.06, 14, 14);
+const bubbleMaterial = new THREE.MeshStandardMaterial({
+  color: 0xfff7f7,
+  transparent: true,
+  opacity: 0.68,
+  roughness: 0.15,
+  metalness: 0.1
 });
 
-function resetUI() {
-  imagePreview.classList.add('hidden');
-  videoPreview.classList.add('hidden');
-  resultSection.classList.add('hidden');
-  reasonList.innerHTML = '';
+const bubbles = [];
+for (let i = 0; i < 90; i++) {
+  const b = new THREE.Mesh(bubbleGeometry, bubbleMaterial);
+  respawnBubble(b, true);
+  scene.add(b);
+  bubbles.push(b);
 }
 
-async function analyzeImage(url, file) {
-  imagePreview.src = url;
-  imagePreview.classList.remove('hidden');
-
-  await imagePreview.decode();
-  const pixelData = samplePixels(imagePreview);
-
-  const reasons = [];
-  let score = 45;
-
-  if (pixelData.edgeAbruptness > 0.78) {
-    score += 14;
-    reasons.push('Unnaturally abrupt edge transitions detected.');
-  }
-  if (pixelData.channelMismatch > 0.1) {
-    score += 11;
-    reasons.push('Color channel mismatch suggests synthetic upscaling artifacts.');
-  }
-  if (file.name.match(/(generated|midjourney|dall|stable|ai)/i)) {
-    score += 16;
-    reasons.push('Filename contains AI-generation keywords.');
-  }
-  if (file.size < 90 * 1024) {
-    score += 9;
-    reasons.push('Very small size for the dimensions provided.');
-  }
-
-  score += Math.floor(Math.random() * 13) - 6;
-
-  return {
-    type: 'image',
-    score: clamp(score),
-    reasons: reasons.length ? reasons : ['No obvious synthetic artifacts detected by this heuristic.']
-  };
+function respawnBubble(bubble, randomY = false) {
+  bubble.position.x = (Math.random() - 0.5) * 8.5;
+  bubble.position.z = -2 - Math.random() * 9;
+  bubble.position.y = randomY ? -3.5 + Math.random() * 7 : -3.7;
+  bubble.userData.speed = 0.008 + Math.random() * 0.022;
+  bubble.scale.setScalar(0.5 + Math.random() * 1.4);
 }
 
-async function analyzeVideo(url, file) {
-  videoPreview.src = url;
-  videoPreview.classList.remove('hidden');
+window.addEventListener('mousemove', (event) => {
+  const x = (event.clientX / window.innerWidth) * 2 - 1;
+  const y = (event.clientY / window.innerHeight) * 2 - 1;
+  can.rotation.y = x * 0.45;
+  can.rotation.x = y * 0.18;
+});
 
-  await videoPreview.play().catch(() => undefined);
-  videoPreview.pause();
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
-  const reasons = [];
-  let score = 40;
+const clock = new THREE.Clock();
 
-  if (videoPreview.duration > 0 && videoPreview.duration < 4) {
-    score += 10;
-    reasons.push('Short clip duration often appears in AI-generated samples.');
+function animate() {
+  requestAnimationFrame(animate);
+
+  const t = clock.getElapsedTime();
+
+  can.position.y = Math.sin(t * 1.2) * 0.17;
+  can.rotation.z = Math.sin(t * 0.6) * 0.03;
+
+  for (const bubble of bubbles) {
+    bubble.position.y += bubble.userData.speed;
+    bubble.position.x += Math.sin(t + bubble.position.z) * 0.002;
+    if (bubble.position.y > 3.8) {
+      respawnBubble(bubble);
+    }
   }
-  if (file.name.match(/(runway|sora|gen|ai|synth)/i)) {
-    score += 15;
-    reasons.push('Filename contains terms common in generated videos.');
-  }
-  if (videoPreview.videoWidth >= 1920 && file.size < 800 * 1024) {
-    score += 14;
-    reasons.push('High resolution with unusually low file size.');
-  }
 
-  const temporalNoise = await sampleVideoTemporalNoise(videoPreview);
-  if (temporalNoise > 0.15) {
-    score += 12;
-    reasons.push('Temporal consistency noise pattern is elevated.');
-  }
-
-  score += Math.floor(Math.random() * 15) - 7;
-
-  return {
-    type: 'video',
-    score: clamp(score),
-    reasons: reasons.length ? reasons : ['No obvious synthetic temporal patterns detected by this heuristic.']
-  };
+  renderer.render(scene, camera);
 }
 
-function samplePixels(img) {
-  const ctx = analysisCanvas.getContext('2d', { willReadFrequently: true });
-  analysisCanvas.width = Math.min(img.naturalWidth, 256);
-  analysisCanvas.height = Math.min(img.naturalHeight, 256);
-  ctx.drawImage(img, 0, 0, analysisCanvas.width, analysisCanvas.height);
-
-  const { data } = ctx.getImageData(0, 0, analysisCanvas.width, analysisCanvas.height);
-  let edgeSum = 0;
-  let mismatchSum = 0;
-  let samples = 0;
-
-  for (let i = 4 * analysisCanvas.width; i < data.length - 4; i += 32) {
-    const dr = Math.abs(data[i] - data[i - 4]);
-    const dg = Math.abs(data[i + 1] - data[i - 3]);
-    const db = Math.abs(data[i + 2] - data[i - 2]);
-    edgeSum += (dr + dg + db) / 765;
-    mismatchSum += Math.abs(dr - dg) / 255 + Math.abs(db - dg) / 255;
-    samples++;
-  }
-
-  return {
-    edgeAbruptness: edgeSum / samples,
-    channelMismatch: mismatchSum / (samples * 2)
-  };
-}
-
-async function sampleVideoTemporalNoise(video) {
-  if (!video.duration || video.duration <= 0.2) return 0;
-
-  const ctx = analysisCanvas.getContext('2d', { willReadFrequently: true });
-  analysisCanvas.width = Math.min(video.videoWidth || 320, 320);
-  analysisCanvas.height = Math.min(video.videoHeight || 180, 180);
-
-  const times = [0.1, Math.min(video.duration * 0.5, video.duration - 0.1)];
-  const frames = [];
-
-  for (const t of times) {
-    await seekVideo(video, t);
-    ctx.drawImage(video, 0, 0, analysisCanvas.width, analysisCanvas.height);
-    frames.push(ctx.getImageData(0, 0, analysisCanvas.width, analysisCanvas.height).data);
-  }
-
-  let diff = 0;
-  let count = 0;
-  for (let i = 0; i < frames[0].length; i += 24) {
-    diff += Math.abs(frames[0][i] - frames[1][i]) / 255;
-    count++;
-  }
-
-  return diff / count;
-}
-
-function seekVideo(video, time) {
-  return new Promise((resolve) => {
-    const handler = () => {
-      video.removeEventListener('seeked', handler);
-      resolve();
-    };
-    video.addEventListener('seeked', handler, { once: true });
-    video.currentTime = time;
-  });
-}
-
-function renderResult(result) {
-  resultSection.classList.remove('hidden');
-  meterBar.style.width = `${result.score}%`;
-  scoreText.textContent = `AI-generated likelihood score: ${result.score} / 100`;
-
-  verdictText.textContent =
-    result.score >= 75
-      ? 'Likely AI-generated.'
-      : result.score >= 45
-        ? 'Possibly AI-generated.'
-        : 'Likely human-captured media.';
-
-  result.reasons.forEach((reason) => {
-    const li = document.createElement('li');
-    li.textContent = reason;
-    reasonList.appendChild(li);
-  });
-}
-
-function clamp(score) {
-  return Math.max(1, Math.min(100, Math.round(score)));
-}
+animate();
